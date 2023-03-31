@@ -35,10 +35,14 @@ pipeline {
         stage('Process build') {
                parallel {
                     stage('Artifact Jar') {
-                        archiveArtifacts artifacts: 'target/*.jar', followSymlinks: false
+                        steps {
+                            archiveArtifacts artifacts: 'target/*.jar', followSymlinks: false
+                        }
                     }
                     stage('Process Test reports') {
-                        junit checksName: 'Jenkins Junit Tests', skipMarkingBuildUnstable: true, testResults: 'target/surefire-reports/*.xml'
+                        steps {
+                            junit checksName: 'Jenkins Junit Tests', skipMarkingBuildUnstable: true, testResults: 'target/surefire-reports/*.xml'
+                        }
                     }
                }
         }
