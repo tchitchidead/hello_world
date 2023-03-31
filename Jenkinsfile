@@ -4,6 +4,13 @@ pipeline {
         maven 'V3.9.1'
     }
     stages {
+        stage('Checkout')
+        {
+            steps {
+                echo 'we are building for step ${currentBuild.number}'
+                git branch: 'main', credentialsId: '08239c21-315b-4576-b6ab-caa2d7325a02', url: 'git@github.com:aqw42/hello_world'
+            }
+        }
         stage('Generate')
         {
             steps {
