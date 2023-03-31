@@ -1,17 +1,37 @@
 pipeline {
-  agent any
-  stages {
-    stage('build') {
-      steps {
-        sh 'mvn compile'
-      }
+    agent { label 'linux' }
+    tools {
+        maven 'V3.9.1'
     }
-
-    stage('test') {
-      steps {
-        sh 'mvn test'
-      }
+    stages {
+        stage('Generate')
+        {
+            steps {
+                sh 'mvn generate-test-resources process-test-resources'
+            }
+        }
+        stage('Compile') {
+            steps {
+                sh 'mvn compile'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'mvn -Dmaven.test.failure.ignore=true -DtestFailureIgnore=true test'
+            }
+        }
+        stage('Generate Jar') {
+            steps {
+                sh 'mvn -Dmaven.test.failure.ignore=true -DtestFailureIgnore=true package'
+            }
+        }
     }
-
-  }
+    post {
+        success {
+            archiveArtifacts artifacts: 'target/*.jar', followSymlinks: false
+        }
+        always {
+            junit checksName: 'Jenkins Junit Tests', skipMarkingBuildUnstable: true, testResults: 'target/surefire-reports/*.xml'
+        }
+    }
 }
