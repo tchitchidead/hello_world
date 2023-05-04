@@ -7,7 +7,7 @@ pipeline {
         stage('Checkout')
         {
             steps {
-                git branch: 'main', credentialsId: '08239c21-315b-4576-b6ab-caa2d7325a02', url: 'github.com/tchitchidead/hello_world.git'
+                git branch: 'main', credentialsId: 'cc220cf9-31c8-4804-971b-dcb93036e30a', url: 'git@github.com:tchitchidead/hello_world.git'
             }
         }
         stage('Generate')
